@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Dashboard</title>
+</head>
+
+<body>
+
+<h1>Dashboard</h1>
+
+<p id="data"></p>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+
+const token = localStorage.getItem("token")
+
+if(!token){
+location="index.html"
+}
+
+fetch("/dashboard",{
+headers:{
+"authorization":token
+}
+})
+.then(res=>res.json())
+.then(data=>{
+document.getElementById("data").innerText = data.message
+})
+
+function logout(){
+
+localStorage.removeItem("token")
+
+location="index.html"
+
+}
+
+</script>
+
+</body>
+
+</html>
