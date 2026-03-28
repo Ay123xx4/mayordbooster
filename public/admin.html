@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
+
+    <table class="min-w-full bg-white rounded shadow">
+      <thead class="bg-blue-500 text-white">
+        <tr>
+          <th class="py-3 px-4 text-left">Username</th>
+          <th class="py-3 px-4 text-left">Email</th>
+          <th class="py-3 px-4 text-left">Role</th>
+        </tr>
+      </thead>
+      <tbody id="userTable" class="text-gray-700">
+        <!-- Users will be loaded here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadUsers() {
+      try {
+        const token = localStorage.getItem('token'); // assuming token stored on login
+        const res = await fetch('/admin', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!res.ok) throw new Error('Access denied or invalid token');
+        const users = await res.json();
+        const table = document.getElementById('userTable');
+        table.innerHTML = '';
+        users.forEach(user => {
+          table.innerHTML += `
+            <tr class="border-b">
+              <td class="py-2 px-4">${user.username}</td>
+              <td class="py-2 px-4">${user.email || '-'}</td>
+              <td class="py-2 px-4 capitalize">${user.role}</td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>

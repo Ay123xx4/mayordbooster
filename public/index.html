@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen">
+
+<div class="bg-white p-8 rounded-2xl shadow-lg w-80">
+<h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+
+<input id="username" placeholder="Username" class="w-full mb-2 p-2 border rounded" />
+<input id="password" type="password" placeholder="Password" class="w-full mb-4 p-2 border rounded" />
+
+<button onclick="index()" class="w-full bg-blue-500 text-white p-2 rounded">Login</button>
+
+  <p class="mt-4 text-center text-gray-600">
+      Don’t have an account? 
+      <a href="signup.html" class="text-blue-500 hover:underline font-medium">Sign-Up</a>
+    </p>
+    
+<div id="success" class="hidden mt-4 text-green-500 text-center animate-pulse">Logging in...</div>
+
+</div>
+
+<script>
+async function index(){
+  const res = await fetch('/index',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({username:username.value,password:password.value})
+  });
+
+  const data = await res.json();
+
+  if(data.message === 'User not found') alert('User not found');
+  else if(data.message === 'Incorrect password') alert('Incorrect password');
+  else{
+    localStorage.setItem('token', data.token);
+    document.getElementById('success').classList.remove('hidden');
+    setTimeout(()=> window.location='dashboard.html',1500);
+  }
+}
+</script>
+
+</body>
+</html>
